@@ -21,7 +21,7 @@ RENDER_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_HOSTNAME:
     ALLOWED_HOSTS = [RENDER_HOSTNAME, ".onrender.com"]
 else:
-    ALLOWED_HOSTS = ["*"]   # local development
+    ALLOWED_HOSTS =os.environ.get("ALLOWED_HOSTS", "*").split(",")  # local development
 
 
 # ---------------------------------------------------------
