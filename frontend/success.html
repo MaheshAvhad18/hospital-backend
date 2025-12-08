@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Success</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Appointment Confirmed!</h2>
+    <p>Your token number:</p>
+
+    <h1 id="tokenBox" style="text-align:center;"></h1>
+
+    <button onclick="goHome()">Book Another</button>
+</div>
+
+<script>
+document.getElementById("tokenBox").innerText = localStorage.getItem("token");
+
+function goHome() {
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

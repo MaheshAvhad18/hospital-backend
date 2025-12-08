@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Doctor</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Select Doctor</h2>
+    <div id="doctorList"></div>
+</div>
+
+<script>
+const API_BASE = "https://hospital-backend-4s1t.onrender.com/api/";
+let hospital_id = localStorage.getItem("hospital_id");
+
+fetch(`${API_BASE}hospitals/${hospital_id}/doctors/`)
+    .then(res => res.json())
+    .then(data => {
+        let box = document.getElementById("doctorList");
+        data.forEach(d => {
+            box.innerHTML += `
+                <div class="card" onclick="chooseDoctor(${d.id})">
+                    <b>${d.name}</b><br>
+                    <small>${d.specialization}</small>
+                </div>
+            `;
+        });
+    });
+
+function chooseDoctor(id) {
+    localStorage.setItem("doctor_id", id);
+    window.location.href = "slots.html";
+}
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Appointment</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Enter Details</h2>
+
+    <input id="name" placeholder="Enter your name">
+    <input id="phone" placeholder="Enter your phone">
+
+    <button onclick="bookNow()">Confirm Booking</button>
+</div>
+
+<script>
+const API_BASE = "https://hospital-backend-4s1t.onrender.com/api/";
+
+function bookNow() {
+    let doctor_id = localStorage.getItem("doctor_id");
+    let date = localStorage.getItem("slot_date");
+    let time = localStorage.getItem("slot_time");
+
+    fetch(API_BASE + "book-appointment/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            doctor_id,
+            date,
+            time,
+            patient_name: document.getElementById("name").value,
+            patient_phone: document.getElementById("phone").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        localStorage.setItem("token", data.token);
+        window.location.href = "success.html";
+    });
+}
+</script>
+
+</body>
+</html>

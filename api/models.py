@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User , Group
 
 # -----------------------------
 # Hospital Model
@@ -36,15 +36,36 @@ class Doctor(models.Model):
 # -----------------------------
 # Staff Profile (Reception + Super Admin for each hospital)
 # -----------------------------
+
 class StaffProfile(models.Model):
     ROLE_CHOICES = (
         ("superadmin", "Super Admin"),
-        ("reception", "Reception"),
+        ("reception", "Reception Staff"),
+        ("doctor", "Doctor"),
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     hospital = models.ForeignKey(Hospital, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        role_to_group = {
+            "superadmin": "SuperAdmin",
+            "reception": "Reception",
+            "doctor": "Doctor",
+        }
+
+        group_name = role_to_group.get(self.role)
+
+        if group_name:
+            group = Group.objects.get(name=group_name)
+
+            # remove old roles
+            self.user.groups.clear()
+            # assign correct role
+            self.user.groups.add(group)
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Slot</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Select Date & Slot</h2>
+
+    <input type="date" id="datePick" onchange="loadSlots()">
+
+    <div id="slotList"></div>
+</div>
+
+<script>
+const API_BASE = "https://hospital-backend-4s1t.onrender.com/api/";
+let doctor_id = localStorage.getItem("doctor_id");
+
+function loadSlots() {
+    let date = document.getElementById("datePick").value;
+    if (!date) return;
+
+    fetch(`${API_BASE}doctors/${doctor_id}/availability/?date=${date}`)
+        .then(res => res.json())
+        .then(data => {
+            let box = document.getElementById("slotList");
+            box.innerHTML = "";
+
+            data.available_slots.forEach(t => {
+                box.innerHTML += `
+                    <div class="card" onclick="selectSlot('${t}', '${date}')">
+                        ${t}
+                    </div>
+                `;
+            });
+        });
+}
+
+function selectSlot(time, date) {
+    localStorage.setItem("slot_time", time);
+    localStorage.setItem("slot_date", date);
+    window.location.href = "booking.html";
+}
+</script>
+
+</body>
+</html>
